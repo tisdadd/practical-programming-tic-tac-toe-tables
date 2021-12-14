@@ -1,7 +1,7 @@
 @startuml
 ' Two actors as players, giving an alias for simplier writing later
-actor p1 AS "Player 1"
-actor p2 AS "Player 2"
+actor p1 as "Player 1"
+actor p2 as "Player 2"
 
 ' The grid the game is played on
 participant grid as "Game Grid"
