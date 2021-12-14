@@ -1,0 +1,26 @@
+@startuml
+' Two actors as players, giving an alias for simplier writing later
+actor p1 AS "Player 1"
+actor p2 AS "Player 2"
+
+' The grid the game is played on
+participant grid as "Game Grid"
+
+' The core loop of the game
+loop While Game is Not Over
+    alt Player One's Turn
+        p1 -> grid : Choose an open position
+        return Is the Game Over?
+        alt Game is Not Over
+            p1 -> p2 : Change to Player Two's Turn
+        end
+        
+    else Player Two's Turn
+        p2 -> grid : Choose an open position
+        return Is the Game Over?
+        alt Game is Not Over
+            p2 -> p1 : Change to Player One's Turn
+        end
+    end
+end
+@enduml
