@@ -10,3 +10,5 @@ How this game works. Here we answer the following questions, and add in more det
   - What makes that loop end?
 
 ## Folder and File List
+
+- [rules.md](rules.md) - The rules of this game.
