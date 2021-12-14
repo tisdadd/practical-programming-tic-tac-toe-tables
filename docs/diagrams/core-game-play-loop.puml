@@ -10,17 +10,10 @@ participant grid as "Game Grid"
 loop While Game is Not Over
     alt Player One's Turn
         p1 -> grid : Choose an open position
-        return Is the Game Over?
-        alt Game is Not Over
-            p1 -> p2 : Change to Player Two's Turn
-        end
-        
+        p1 -> p2 : Change to Player Two's Turn        
     else Player Two's Turn
         p2 -> grid : Choose an open position
-        return Is the Game Over?
-        alt Game is Not Over
-            p2 -> p1 : Change to Player One's Turn
-        end
+        p2 -> p1 : Change to Player One's Turn        
     end
 end
 @enduml
