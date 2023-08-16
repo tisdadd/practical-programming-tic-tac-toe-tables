@@ -11,4 +11,5 @@ How this game works. Here we answer the following questions, and add in more det
 
 ## Folder and File List
 
+- [core-loop.md](core-loop.md) - The main loop of the game.
 - [rules.md](rules.md) - The rules of this game.
