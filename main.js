@@ -130,6 +130,9 @@ function matchDisplayBoardToGameBoard () {
       )
       button.textContent = gameBoard[i][j]
       button.disabled = gameBoard[i][j] || gameIsOver
+      button.parentElement.ariaLabel = `Row ${i + 1}, Column ${j + 1} - ${
+        gameBoard[i][j] || 'Not Yet Played'
+      }`
     }
   }
 }
