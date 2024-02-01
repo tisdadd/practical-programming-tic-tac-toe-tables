@@ -154,3 +154,9 @@ function makeMove (rowIndex, columnIndex) {
   matchDisplayBoardToGameBoard()
   return true
 }
+
+function newGame () {
+  initializeGameBoard()
+  currentPlayerCharacterIndex = 0
+  matchDisplayBoardToGameBoard()
+}
