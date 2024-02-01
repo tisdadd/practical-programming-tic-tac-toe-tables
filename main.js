@@ -121,6 +121,19 @@ function canMakeMove () {
   return areThereOpenSpaces() && !checkForWinner()
 }
 
+function matchDisplayBoardToGameBoard () {
+  const gameIsOver = !canMakeMove()
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      const button = document.querySelector(
+        `table tr:nth-child(${i + 1}) td:nth-child(${j + 1}) button`
+      )
+      button.textContent = gameBoard[i][j]
+      button.disabled = gameBoard[i][j] || gameIsOver
+    }
+  }
+}
+
 function makeMove (rowIndex, columnIndex) {
   // game already over
   if (!canMakeMove()) {
@@ -135,5 +148,6 @@ function makeMove (rowIndex, columnIndex) {
     playerCharacters[currentPlayerCharacterIndex]
   // change player
   currentPlayerCharacterIndex = (currentPlayerCharacterIndex + 1) % 2
+  matchDisplayBoardToGameBoard()
   return true
 }
