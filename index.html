@@ -4,13 +4,12 @@
 <head>
     <title>Tic-Tac-Toe</title>
     <link rel="stylesheet" href="main.css" />
-    <script src="main.js"></script>
 </head>
 
 <body>
     <div>
         <h1>Tic-Tac-Toe</h1>
-        <p>Please open the developer console to play at the moment</p>
+        <p id="playerTurn"></p>
         <table role="grid">
             <tr role="row">
                 <td role="gridcell"><button type="button" onclick="makeMove(0, 0)">
@@ -49,6 +48,7 @@
         <button onclick="newGame()">New Game</button>
     </div>
     <script src="accessible-table-grid.js"></script>
+    <script src="main.js"></script>
 </body>
 
 </html>

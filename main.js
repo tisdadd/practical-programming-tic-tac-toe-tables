@@ -18,8 +18,23 @@ function initializeGameBoard () {
     ['', '', '']
   ]
 }
-// we always want the game board to be initialized before we start
-initializeGameBoard()
+
+// Function to display the player turn information
+function displayPlayerTurn () {
+  const playerTurnElement = document.getElementById('playerTurn')
+
+  const gameIsOver = !canMakeMove()
+  if (gameIsOver) {
+    const winner = checkForWinner()
+    if (winner) {
+      playerTurnElement.textContent = `Winner: ${winner}`
+    } else {
+      playerTurnElement.textContent = 'Tie Game'
+    }
+  } else {
+    playerTurnElement.textContent = `Current Player: ${playerCharacters[currentPlayerCharacterIndex]}`
+  }
+}
 
 // a few functions to check each way for a winner
 function checkColumnForWinner (columnIndex) {
@@ -152,11 +167,19 @@ function makeMove (rowIndex, columnIndex) {
   // change player
   currentPlayerCharacterIndex = (currentPlayerCharacterIndex + 1) % 2
   matchDisplayBoardToGameBoard()
+  displayPlayerTurn()
   return true
 }
 
 function newGame () {
   initializeGameBoard()
-  currentPlayerCharacterIndex = 0
+  if (confirm('First Player Should Be X - Cancel for O')) {
+    currentPlayerCharacterIndex = 0
+  } else {
+    currentPlayerCharacterIndex = 1
+  }
+  displayPlayerTurn()
   matchDisplayBoardToGameBoard()
 }
+
+newGame()
