@@ -10,6 +10,12 @@ let currentPlayerCharacterIndex = 0
 // Game Board - 3x3 Grid
 let gameBoard
 
+// How many moves have been made in a game
+let movesMade = 0
+
+// Initialize a winner variable
+let winner = false
+
 // Function to initialize the game board as needed
 function initializeGameBoard () {
   gameBoard = [
@@ -25,7 +31,6 @@ function displayPlayerTurn () {
 
   const gameIsOver = !canMakeMove()
   if (gameIsOver) {
-    const winner = checkForWinner()
     if (winner) {
       playerTurnElement.textContent = `Winner: ${winner}`
     } else {
@@ -102,15 +107,19 @@ function checkLeftToRightBottomToTopDiagonalForWinner () {
 }
 
 // function to check all ways for a winner
-function checkForWinner () {
-  // check each row and column for a winner
-  for (let i = 0; i < 3; i++) {
-    const columnWinner = checkColumnForWinner(i)
-    const rowWinner = checkRowForWinner(i)
-    if (columnWinner || rowWinner) {
-      return columnWinner || rowWinner
-    }
+function checkForWinner (rowIndex, columnIndex) {
+
+  // check if we have a winner in the given row
+  const rowWinner = checkRowForWinner(rowIndex)
+  if (rowWinner) {
+    return rowWinner
   }
+  // check if we have a winner in the given column
+  const columnWinner = checkColumnForWinner(columnIndex)
+  if (columnWinner) {
+    return columnWinner
+  }
+
   // then the diagonals
   return (
     checkLeftToRightTopToBottomDiagonalForWinner() ||
@@ -119,21 +128,9 @@ function checkForWinner () {
   )
 }
 
-// check if there are any open spaces
-function areThereOpenSpaces () {
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 3; j++) {
-      if (!gameBoard[i][j]) {
-        return true
-      }
-    }
-  }
-  return false
-}
-
 // check if we are able to make any more moves, if not the game is over
 function canMakeMove () {
-  return areThereOpenSpaces() && !checkForWinner()
+  return movesMade < 9 && !winner
 }
 
 function matchDisplayBoardToGameBoard () {
@@ -164,6 +161,13 @@ function makeMove (rowIndex, columnIndex) {
   // make the move
   gameBoard[rowIndex][columnIndex] =
     playerCharacters[currentPlayerCharacterIndex]
+
+  // let move counter go up
+  movesMade++
+
+  // check if that move was a winner
+  winner = checkForWinner(rowIndex, columnIndex)
+
   // change player
   currentPlayerCharacterIndex = (currentPlayerCharacterIndex + 1) % 2
   matchDisplayBoardToGameBoard()
@@ -208,6 +212,10 @@ createBoardTableCells()
 
 function newGame (startingCharacter) {
   initializeGameBoard()
+  // reset how many moves have been made
+  movesMade = 0
+  // reset the winner
+  winner = false
   currentPlayerCharacterIndex = playerCharacters.indexOf(startingCharacter)
   // make a default first player if not passed in
   if(currentPlayerCharacterIndex === -1) {
