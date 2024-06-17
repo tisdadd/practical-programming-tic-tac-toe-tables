@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 5px;
+            margin-top: 20px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            background-color: #fff;
+            border: 2px solid #ccc;
+            cursor: pointer;
+        }
+
+        .cell:hover,
+        .cell:focus {
+            background-color: #e0e0e0;
+        }
+
+        .winner {
+            margin-top: 20px;
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        button,
+        select {
+            margin-top: 20px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <label for="starting-player">Select Starting Player: </label>
+        <select id="starting-player">
+            <option value="X">X</option>
+            <option value="O">O</option>
+        </select>
+        <button onclick="startGame()">Start Game</button>
+        <div class="container" id="board" role="grid" aria-label="Tic-Tac-Toe Board" style="display: none;"></div>
+        <div class="winner" id="winner" aria-live="polite"></div>
+        <button onclick="resetGame()" style="display: none;">Restart Game</button>
+    </div>
+    <script>
+        const board = document.getElementById('board');
+        const winnerDisplay = document.getElementById('winner');
+        const startButton = document.querySelector('button[onclick="startGame()"]');
+        const resetButton = document.querySelector('button[onclick="resetGame()"]');
+        const startingPlayerSelect = document.getElementById('starting-player');
+        let currentPlayer;
+        let gameBoard = ['', '', '', '', '', '', '', '', ''];
+        let gameActive = true;
+
+        const winningConditions = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+
+        function startGame() {
+            currentPlayer = startingPlayerSelect.value;
+            board.style.display = 'grid';
+            startButton.style.display = 'none';
+            resetButton.style.display = 'block';
+            winnerDisplay.textContent = '';
+        }
+
+        function handleCellClick(event) {
+            const cell = event.target;
+            const cellIndex = Array.from(board.children).indexOf(cell);
+
+            if (gameBoard[cellIndex] !== '' || !gameActive) {
+                return;
+            }
+
+            gameBoard[cellIndex] = currentPlayer;
+            cell.textContent = currentPlayer;
+            cell.setAttribute('aria-label', `Row ${Math.floor(cellIndex / 3) + 1}, Column ${cellIndex % 3 + 1}, ${currentPlayer}`);
+
+            if (checkWinner()) {
+                gameActive = false;
+                winnerDisplay.textContent = `Player ${currentPlayer} Wins!`;
+                return;
+            }
+
+            if (gameBoard.every(cell => cell !== '')) {
+                gameActive = false;
+                winnerDisplay.textContent = 'Game is a Draw!';
+                return;
+            }
+
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        }
+
+        function checkWinner() {
+            return winningConditions.some(condition => {
+                return condition.every(index => {
+                    return gameBoard[index] === currentPlayer;
+                });
+            });
+        }
+
+        function resetGame() {
+            gameBoard = ['', '', '', '', '', '', '', '', ''];
+            gameActive = true;
+            winnerDisplay.textContent = '';
+            board.style.display = 'none';
+            startButton.style.display = 'block';
+            resetButton.style.display = 'none';
+            Array.from(board.children).forEach(cell => {
+                cell.textContent = '';
+                cell.setAttribute('aria-label', `Row ${Math.floor(Array.from(board.children).indexOf(cell) / 3) + 1}, Column ${Array.from(board.children).indexOf(cell) % 3 + 1}, empty`);
+            });
+        }
+
+        function handleArrowKeyNavigation(event) {
+            const cells = Array.from(board.children);
+            const currentIndex = cells.indexOf(document.activeElement);
+            let newIndex;
+
+            switch (event.key) {
+                case 'ArrowUp':
+                    newIndex = currentIndex - 3;
+                    break;
+                case 'ArrowDown':
+                    newIndex = currentIndex + 3;
+                    break;
+                case 'ArrowLeft':
+                    newIndex = currentIndex - 1;
+                    break;
+                case 'ArrowRight':
+                    newIndex = currentIndex + 1;
+                    break;
+                default:
+                    return;
+            }
+
+            if (newIndex >= 0 && newIndex < cells.length) {
+                cells[newIndex].focus();
+            }
+        }
+
+        function createBoard() {
+            for (let i = 0; i < 9; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.setAttribute('role', 'gridcell');
+                cell.setAttribute('aria-label', `Row ${Math.floor(i / 3) + 1}, Column ${i % 3 + 1}, empty`);
+                cell.setAttribute('tabindex', '0');
+                cell.addEventListener('click', handleCellClick);
+                cell.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        handleCellClick(event);
+                    } else {
+                        handleArrowKeyNavigation(event);
+                    }
+                });
+                board.appendChild(cell);
+            }
+        }
+
+        createBoard();
+    </script>
+</body>
+
+</html>

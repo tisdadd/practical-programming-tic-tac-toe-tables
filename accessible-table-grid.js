@@ -2,7 +2,7 @@ const selectables = document.querySelectorAll('table td[role="gridcell"]')
 
 selectables[0].setAttribute('tabindex', 0)
 
-const trs = document.querySelectorAll('table tbody tr')
+const trs = document.querySelectorAll('table tr')
 let row = 0
 let col = 0
 let maxrow = trs.length - 1
