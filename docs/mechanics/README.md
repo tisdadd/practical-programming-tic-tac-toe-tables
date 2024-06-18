@@ -30,3 +30,4 @@ The answers at the start of this document are answered through the files linked.
 - ~~What should the final display look like?~~
 - ~~What should be refactored (the code changed to be more readable or efficient)?~~
 - Does it count as either player starting in the status that it is currently in?
+  - Yes it does.
