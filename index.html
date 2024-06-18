@@ -10,45 +10,14 @@
     <div>
         <h1>Tic-Tac-Toe</h1>
         <p id="playerTurn"></p>
-        <table role="grid">
-            <tr role="row">
-                <td role="gridcell"><button type="button" onclick="makeMove(0, 0)">
-
-                    </button></td>
-                <td role="gridcell"><button type="button" onclick="makeMove(0, 1)">
-
-                    </button></td>
-                <td role="gridcell"><button type="button" onclick="makeMove(0, 2)">
-
-                    </button></td>
-            </tr>
-            <tr role="row">
-                <td role="gridcell"><button type="button" onclick="makeMove(1, 0)">
-
-                    </button></td>
-                <td role="gridcell"><button type="button" onclick="makeMove(1, 1)">
-
-                    </button></td>
-                <td role="gridcell"><button type="button" onclick="makeMove(1, 2)">
-
-                    </button></td>
-            </tr>
-            <tr role="row">
-                <td role="gridcell"><button type="button" onclick="makeMove(2, 0)">
-
-                    </button></td>
-                <td role="gridcell"><button type="button" onclick="makeMove(2, 1)">
-
-                    </button></td>
-                <td role="gridcell"><button type="button" onclick="makeMove(2, 2)">
-
-                    </button></td>
-            </tr>
+        <table>
         </table>
-        <button onclick="newGame()">New Game</button>
+        <h2>Start New Game</h2>
+        <button onclick="newGame('X')">X Begins</button>
+        <button onclick="newGame('O')">O Begins</button>
     </div>
-    <script src="accessible-table-grid.js"></script>
     <script src="main.js"></script>
+    <script src="accessible-table-grid.js"></script>
 </body>
 
 </html>

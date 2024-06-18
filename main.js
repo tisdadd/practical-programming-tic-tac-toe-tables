@@ -10,6 +10,12 @@ let currentPlayerCharacterIndex = 0
 // Game Board - 3x3 Grid
 let gameBoard
 
+// How many moves have been made in a game
+let movesMade = 0
+
+// Initialize a winner variable
+let winner = false
+
 // Function to initialize the game board as needed
 function initializeGameBoard () {
   gameBoard = [
@@ -25,7 +31,6 @@ function displayPlayerTurn () {
 
   const gameIsOver = !canMakeMove()
   if (gameIsOver) {
-    const winner = checkForWinner()
     if (winner) {
       playerTurnElement.textContent = `Winner: ${winner}`
     } else {
@@ -102,15 +107,19 @@ function checkLeftToRightBottomToTopDiagonalForWinner () {
 }
 
 // function to check all ways for a winner
-function checkForWinner () {
-  // check each row and column for a winner
-  for (let i = 0; i < 3; i++) {
-    const columnWinner = checkColumnForWinner(i)
-    const rowWinner = checkRowForWinner(i)
-    if (columnWinner || rowWinner) {
-      return columnWinner || rowWinner
-    }
+function checkForWinner (rowIndex, columnIndex) {
+
+  // check if we have a winner in the given row
+  const rowWinner = checkRowForWinner(rowIndex)
+  if (rowWinner) {
+    return rowWinner
   }
+  // check if we have a winner in the given column
+  const columnWinner = checkColumnForWinner(columnIndex)
+  if (columnWinner) {
+    return columnWinner
+  }
+
   // then the diagonals
   return (
     checkLeftToRightTopToBottomDiagonalForWinner() ||
@@ -119,21 +128,9 @@ function checkForWinner () {
   )
 }
 
-// check if there are any open spaces
-function areThereOpenSpaces () {
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 3; j++) {
-      if (!gameBoard[i][j]) {
-        return true
-      }
-    }
-  }
-  return false
-}
-
 // check if we are able to make any more moves, if not the game is over
 function canMakeMove () {
-  return areThereOpenSpaces() && !checkForWinner()
+  return movesMade < 9 && !winner
 }
 
 function matchDisplayBoardToGameBoard () {
@@ -164,6 +161,13 @@ function makeMove (rowIndex, columnIndex) {
   // make the move
   gameBoard[rowIndex][columnIndex] =
     playerCharacters[currentPlayerCharacterIndex]
+
+  // let move counter go up
+  movesMade++
+
+  // check if that move was a winner
+  winner = checkForWinner(rowIndex, columnIndex)
+
   // change player
   currentPlayerCharacterIndex = (currentPlayerCharacterIndex + 1) % 2
   matchDisplayBoardToGameBoard()
@@ -171,15 +175,54 @@ function makeMove (rowIndex, columnIndex) {
   return true
 }
 
-function newGame () {
+// Function to create the innards of the table displaying our game board
+function createBoardTableCells () {
+  // Grab the table element
+  const boardTable = document.querySelector('table')
+  for (let row = 0; row < 3; row++) {
+    // create three rows
+    const tableRow = document.createElement('tr')
+    tableRow.setAttribute('role', 'row')
+    for (let col = 0; col < 3; col++) {
+      // and three columns
+      const tableCell = document.createElement('td')
+      // while we were researching, we found since it is td already we don't need to do this
+      // however the accessible-table-grid.js still needs gridcell for looking things up
+      // we could make it look for td instead, but will just add the gridcell role
+      tableCell.setAttribute('role', 'gridcell')
+      // add the row and col attributes for the accessible-table-grid.js
+      // tableCell.dataset.col = col
+      // tableCell.dataset.row = row
+      // make a button for this cell
+      const button = document.createElement('button')
+      button.setAttribute('type', 'button')
+      // no tabbing directly to the button, but instead to the table cell
+      button.setAttribute('tabindex', '-1')
+      // want to still be able to click and make something happen
+      button.setAttribute('onclick', `makeMove(${row}, ${col})`);
+
+      tableCell.appendChild(button)
+      tableRow.appendChild(tableCell)
+    }
+    boardTable.appendChild(tableRow)
+  }
+}
+
+createBoardTableCells()
+
+function newGame (startingCharacter) {
   initializeGameBoard()
-  if (confirm('First Player Should Be X - Cancel for O')) {
+  // reset how many moves have been made
+  movesMade = 0
+  // reset the winner
+  winner = false
+  currentPlayerCharacterIndex = playerCharacters.indexOf(startingCharacter)
+  // make a default first player if not passed in
+  if(currentPlayerCharacterIndex === -1) {
     currentPlayerCharacterIndex = 0
-  } else {
-    currentPlayerCharacterIndex = 1
   }
   displayPlayerTurn()
   matchDisplayBoardToGameBoard()
 }
 
-newGame()
+newGame('X')

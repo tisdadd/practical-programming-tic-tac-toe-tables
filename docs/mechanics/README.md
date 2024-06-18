@@ -27,6 +27,7 @@ The answers at the start of this document are answered through the files linked.
   - Should it always force a draw or win?
 - Should we allow net play when against another human?
     - How could this be implemented?
-- What should the final display look like?
-- What should be refactored (the code changed to be more readable or efficient)?
+- ~~What should the final display look like?~~
+- ~~What should be refactored (the code changed to be more readable or efficient)?~~
 - Does it count as either player starting in the status that it is currently in?
+  - Yes it does.
